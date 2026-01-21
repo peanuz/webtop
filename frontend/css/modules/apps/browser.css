@@ -1,0 +1,214 @@
+/* Browser App */
+.browser-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--app-bg);
+}
+
+/* Browser Tabs (Integrated into Window Header) */
+.window-header.browser-header-integrated {
+    height: 44px;
+    background: var(--header-bg);
+    border-bottom: none;
+    padding-top: 8px;
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+    padding-right: 15px; /* Padding for right-side controls */
+}
+
+/* Move controls to the right for Browser */
+.window-header.browser-header-integrated .window-controls {
+    order: 2; /* Move to end */
+    margin-bottom: 10px;
+    margin-left: auto; /* Push to right */
+}
+
+.browser-tabs {
+    flex: 1;
+    display: flex;
+    gap: 6px;
+    height: 100%;
+    align-items: flex-end;
+    overflow-x: auto;
+    padding-right: 10px;
+    -webkit-app-region: drag;
+    order: 1; /* Tabs first */
+}
+
+.browser-tab {
+    padding: 6px 15px;
+    background: var(--sidebar-bg);
+    border-radius: 8px 8px 0 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: default;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 180px;
+    min-width: 100px;
+    height: 32px;
+    white-space: nowrap;
+    position: relative;
+    transition: background 0.2s;
+    -webkit-app-region: no-drag; 
+}
+
+.browser-tab:hover {
+    background: var(--hover-bg);
+}
+
+.browser-tab.active {
+    background: var(--app-bg);
+    color: var(--text-color);
+}
+
+.browser-tab::after {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: 20%;
+    height: 60%;
+    width: 1px;
+    background: var(--border-color);
+}
+.browser-tab.active::after, .browser-tab:hover::after { display: none; }
+
+.browser-tab span {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.browser-tab i.ph-x {
+    font-size: 12px;
+    border-radius: 50%;
+    padding: 2px;
+}
+.browser-tab i.ph-x:hover { background: var(--hover-bg); }
+
+.new-tab-btn {
+    padding: 6px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    border-radius: 50%;
+    margin-bottom: 4px;
+}
+.new-tab-btn:hover { background: var(--hover-bg); color: var(--text-color); }
+
+/* Browser Toolbar (Address Bar area) */
+.browser-toolbar {
+    background: var(--header-bg);
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.browser-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--text-secondary);
+    padding: 4px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+.browser-btn:hover { background: var(--hover-bg); }
+
+.url-bar {
+    flex: 1;
+    display: flex;
+    background: var(--input-bg);
+    border-radius: 20px;
+    padding: 4px 12px;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid transparent;
+}
+
+.url-bar:focus-within {
+    border-color: var(--accent-color);
+    background: var(--input-bg);
+}
+
+.url-bar input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    margin-left: 8px;
+    color: var(--text-color);
+    background: transparent;
+}
+
+.browser-frame {
+    flex: 1;
+    border: none;
+    background: white;
+}
+
+/* DevTools */
+.devtools-pane {
+    width: 300px;
+    background: #202124;
+    border-left: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Consolas', monospace;
+    font-size: 12px;
+    color: #9aa0a6;
+    display: none; /* Hidden by default */
+}
+
+.devtools-header {
+    display: flex;
+    background: #292a2d;
+    border-bottom: 1px solid #333;
+}
+
+.devtools-tab {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+.devtools-tab.active {
+    border-bottom-color: #8ab4f8;
+    color: #e8eaed;
+}
+
+.devtools-content {
+    flex: 1;
+    overflow: auto;
+    padding: 5px;
+}
+
+.dt-element-tree {
+    padding-left: 10px;
+}
+.dt-tag { color: #569cd6; }
+.dt-attr { color: #9cdcfe; }
+.dt-val { color: #ce9178; }
+.dt-text { color: #d4d4d4; }
+
+.dt-console-msg {
+    padding: 4px 5px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    gap: 5px;
+}
+.dt-console-msg.error { color: #f14c4c; background: rgba(241, 76, 76, 0.1); }
+.dt-console-msg.warn { color: #cca700; background: rgba(204, 167, 0, 0.1); }
+.dt-console-input {
+    background: transparent;
+    border: none;
+    border-top: 1px solid #333;
+    color: #e8eaed;
+    padding: 5px;
+    outline: none;
+    font-family: inherit;
+}

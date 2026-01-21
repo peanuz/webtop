@@ -1,0 +1,31 @@
+services:
+  webtop:
+    image: ${DOCKER_REPOSITORY:-peanuz/webtop}:${DOCKER_TAG:-alpha}
+    container_name: webtop
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      # Persist database and user files
+      - webtop-data:/app/data
+      # Mount docker socket for self-update capability
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET:-change-this-secret-in-production}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+      # Docker update configuration
+      - DOCKER_REPOSITORY=${DOCKER_REPOSITORY:-peanuz/webtop}
+      - DOCKER_TAG=${DOCKER_TAG:-alpha}
+      - WEBTOP_VERSION=${WEBTOP_VERSION:-0.1.0}
+      - UPDATE_CHECK_INTERVAL=${UPDATE_CHECK_INTERVAL:-24}
+    # For PTY support
+    tty: true
+    stdin_open: true
+    labels:
+      - "org.opencontainers.image.version=${WEBTOP_VERSION:-0.1.0}"
+      - "org.opencontainers.image.source=https://github.com/peanuz/webtop"
+
+volumes:
+  webtop-data:

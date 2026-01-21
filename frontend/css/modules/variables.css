@@ -1,0 +1,93 @@
+:root {
+    /* Theme Colors - Dark (default) */
+    --bg-color: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-tertiary: #2a2a2a;
+    --text-color: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.5);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --hover-bg: rgba(255, 255, 255, 0.05);
+
+    /* Accent Color - customizable */
+    --accent-color: #007acc;
+    --accent-hover: #0098ff;
+    --accent-text: #ffffff;
+
+    /* UI Elements */
+    --dock-bg: rgba(20, 20, 20, 0.6);
+    --window-bg: rgba(30, 30, 30, 0.85);
+    --window-header-bg: rgba(40, 40, 40, 0.95);
+    --input-bg: rgba(255, 255, 255, 0.08);
+
+    /* App Specific Defaults (Dark) */
+    --app-bg: #1e1e1e;
+    --sidebar-bg: #252526;
+    --header-bg: #333333;
+    --code-bg: #1e1e1e;
+    --code-text: #d4d4d4;
+    --item-active-bg: rgba(255, 255, 255, 0.1);
+    --terminal-bg: #1e1e1e;
+    --terminal-text: #d4d4d4;
+
+    /* Layout */
+    --border-radius-lg: 16px;
+    --border-radius-sm: 8px;
+    --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --dock-icon-size: 48px;
+    --dock-bounce: 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+
+    /* Font Sizes */
+    --font-size-base: 14px;
+    --font-size-sm: 12px;
+    --font-size-lg: 16px;
+    --font-size-xl: 18px;
+}
+
+/* Light Theme */
+[data-theme="light"] {
+    --bg-color: #f0f2f5;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f3f4f6;
+    --text-color: #202124;
+    --text-secondary: #5f6368;
+    --text-muted: #80868b;
+    --border-color: rgba(0, 0, 0, 0.12);
+    --hover-bg: rgba(0, 0, 0, 0.08);
+    
+    --dock-bg: rgba(255, 255, 255, 0.75);
+    --window-bg: rgba(255, 255, 255, 0.95);
+    --window-header-bg: rgba(245, 245, 245, 0.98);
+    --input-bg: rgba(0, 0, 0, 0.06);
+    
+    --glass-border: 1px solid rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    /* App Specifics for Light Mode */
+    --app-bg: #ffffff;
+    --sidebar-bg: #f8f9fa;
+    --header-bg: #f1f3f4;
+    --code-bg: #ffffff;
+    --code-text: #24292e;
+    --item-active-bg: rgba(0, 0, 0, 0.1);
+    --terminal-bg: #ffffff;
+    --terminal-text: #202124;
+}
+
+/* Font Size Variants */
+[data-font-size="small"] {
+    --font-size-base: 12px;
+    --font-size-sm: 10px;
+    --font-size-lg: 14px;
+    --font-size-xl: 16px;
+}
+
+[data-font-size="large"] {
+    --font-size-base: 16px;
+    --font-size-sm: 14px;
+    --font-size-lg: 18px;
+    --font-size-xl: 20px;
+}

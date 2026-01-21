@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
+    <title>WebTop - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop') no-repeat center center/cover;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .login-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 2;
+            background: rgba(30, 30, 30, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            width: 350px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            background: #3b82f6;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        h2 {
+            color: white;
+            margin: 0 0 10px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 18px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            background: rgba(0, 0, 0, 0.5);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .loading {
+            display: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .ph-spin {
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-overlay"></div>
+    <div class="login-container">
+        <div class="user-avatar">
+            <i class="ph ph-user"></i>
+        </div>
+        <h2 id="formTitle">Loading...</h2>
+        <p class="subtitle" id="formSubtitle"></p>
+
+        <div class="loading" id="loadingState">
+            <i class="ph ph-spinner ph-spin"></i> Checking...
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="authForm" style="display: none;">
+            <div class="input-group">
+                <i class="ph ph-user"></i>
+                <input type="text" id="username" placeholder="Username" required minlength="3">
+            </div>
+            <div class="input-group">
+                <i class="ph ph-lock-key"></i>
+                <input type="password" id="password" placeholder="Password" required minlength="6">
+            </div>
+            <div class="input-group" id="confirmGroup" style="display: none;">
+                <i class="ph ph-lock-key"></i>
+                <input type="password" id="confirmPassword" placeholder="Confirm Password">
+            </div>
+            <div class="input-group" id="totpGroup" style="display: none;">
+                <i class="ph ph-shield-check"></i>
+                <input type="text" id="totpCode" placeholder="2FA Code" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" autocomplete="one-time-code">
+            </div>
+            <button type="submit" id="submitBtn">Continue</button>
+        </form>
+    </div>
+
+    <script>
+        let isSignup = false;
+        let totpRequired = false;
+
+        async function checkAuthStatus() {
+            const loadingEl = document.getElementById('loadingState');
+            const formEl = document.getElementById('authForm');
+            const titleEl = document.getElementById('formTitle');
+            const subtitleEl = document.getElementById('formSubtitle');
+            const confirmGroup = document.getElementById('confirmGroup');
+            const submitBtn = document.getElementById('submitBtn');
+
+            loadingEl.classList.add('show');
+
+            try {
+                // First check if already logged in
+                const sessionRes = await fetch('/api/v1/auth/session', { credentials: 'same-origin' });
+                const sessionData = await sessionRes.json();
+
+                if (sessionData.authenticated) {
+                    window.location.href = '/';
+                    return;
+                }
+
+                // Check if user exists
+                const statusRes = await fetch('/api/v1/auth/status');
+                const statusData = await statusRes.json();
+
+                isSignup = statusData.needsSetup;
+
+                if (isSignup) {
+                    titleEl.textContent = 'Create Account';
+                    subtitleEl.textContent = 'Set up your WebTop admin account';
+                    confirmGroup.style.display = 'block';
+                    document.getElementById('confirmPassword').required = true;
+                    submitBtn.textContent = 'Create Account';
+                } else {
+                    titleEl.textContent = 'Welcome Back';
+                    subtitleEl.textContent = 'Sign in to your WebTop';
+                    submitBtn.textContent = 'Login';
+                }
+
+                loadingEl.classList.remove('show');
+                formEl.style.display = 'block';
+
+            } catch (err) {
+                loadingEl.innerHTML = '<i class="ph ph-warning"></i> Connection error';
+                console.error(err);
+            }
+        }
+
+        function showTotpField() {
+            const totpGroup = document.getElementById('totpGroup');
+            const totpInput = document.getElementById('totpCode');
+            const titleEl = document.getElementById('formTitle');
+            const subtitleEl = document.getElementById('formSubtitle');
+            const submitBtn = document.getElementById('submitBtn');
+
+            totpGroup.style.display = 'block';
+            totpInput.required = true;
+            totpRequired = true;
+
+            titleEl.textContent = '2FA Verification';
+            subtitleEl.textContent = 'Enter the code from your authenticator app';
+            submitBtn.textContent = 'Verify';
+            submitBtn.disabled = false;
+
+            totpInput.focus();
+        }
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const totpCode = document.getElementById('totpCode').value;
+            const errorEl = document.getElementById('errorMessage');
+            const submitBtn = document.getElementById('submitBtn');
+
+            errorEl.classList.remove('show');
+
+            if (isSignup) {
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                if (password !== confirmPassword) {
+                    errorEl.textContent = 'Passwords do not match';
+                    errorEl.classList.add('show');
+                    return;
+                }
+            }
+
+            submitBtn.disabled = true;
+            const loadingText = isSignup ? 'Creating...' : (totpRequired ? 'Verifying...' : 'Logging in...');
+            submitBtn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> ' + loadingText;
+
+            try {
+                const endpoint = isSignup ? '/api/v1/auth/signup' : '/api/v1/auth/login';
+                const payload = { username, password };
+                if (totpCode) {
+                    payload.totpCode = totpCode;
+                }
+
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                    credentials: 'same-origin',
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    // Check if TOTP is required
+                    if (data.totpRequired && !totpRequired) {
+                        showTotpField();
+                        return;
+                    }
+                    throw new Error(data.error || 'Authentication failed');
+                }
+
+                // Success - redirect to desktop
+                document.body.style.transition = 'opacity 0.5s ease';
+                document.body.style.opacity = '0';
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 500);
+
+            } catch (err) {
+                errorEl.textContent = err.message;
+                errorEl.classList.add('show');
+                submitBtn.disabled = false;
+                submitBtn.textContent = isSignup ? 'Create Account' : (totpRequired ? 'Verify' : 'Login');
+            }
+        }
+
+        document.getElementById('authForm').addEventListener('submit', handleSubmit);
+        checkAuthStatus();
+    </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+services:
+  webtop:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: development
+    container_name: webtop-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount source for hot reload (preserve structure for relative paths)
+      - ../backend/src:/app/backend/src:ro
+      - ../backend/drizzle.config.ts:/app/backend/drizzle.config.ts:ro
+      - ../frontend:/app/frontend:ro
+      - webtop-dev-data:/app/data
+    environment:
+      - NODE_ENV=development
+      - JWT_SECRET=dev-secret-not-for-production
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin123
+    tty: true
+    stdin_open: true
+
+volumes:
+  webtop-dev-data:

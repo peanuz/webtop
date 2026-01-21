@@ -1,0 +1,33 @@
+# WebTop Terminal Configuration
+
+# Nice prompt: user@webtop ~/path $
+PROMPT='%F{cyan}%n%f@%F{magenta}webtop%f %F{blue}%~%f %# '
+
+# Aliases
+alias ll='ls -la'
+alias la='ls -A'
+alias l='ls -CF'
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# History
+HISTFILE=~/.zsh_history
+HISTSIZE=1000
+SAVEHIST=1000
+setopt appendhistory
+
+# Better completion
+autoload -Uz compinit && compinit
+
+# Colors for ls
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+
+# Default editor
+export EDITOR=nano
+export VISUAL=nano
+
+# Welcome message
+echo "Welcome to WebTop Terminal"
+echo "Type 'claude' to start Claude Code"
+echo ""

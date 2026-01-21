@@ -1,0 +1,236 @@
+/* Finder App */
+.finder-layout {
+    display: flex;
+    height: 100%;
+    color: var(--text-color);
+    background: var(--app-bg);
+}
+
+.finder-sidebar {
+    width: 150px;
+    background: var(--sidebar-bg);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    border-right: 1px solid var(--border-color);
+}
+
+.finder-sidebar-item {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    opacity: 0.8;
+    color: var(--text-secondary);
+}
+.finder-sidebar-item:hover { background: var(--hover-bg); opacity: 1; color: var(--text-color); }
+.finder-sidebar-item.active { background: var(--accent-color); opacity: 1; color: var(--accent-text); font-weight: 500; }
+.finder-sidebar-item.drag-over {
+    background: rgba(59, 130, 246, 0.3);
+    border-radius: 6px;
+}
+
+.finder-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--app-bg);
+}
+
+.finder-toolbar {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-bottom: 1px solid var(--border-color);
+    gap: 10px;
+    background: var(--header-bg);
+}
+
+.finder-nav-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 0.7;
+    padding: 4px;
+    border-radius: 4px;
+}
+.finder-nav-btn:hover { background: var(--hover-bg); }
+
+.finder-path {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-left: 10px;
+    color: var(--text-color);
+}
+
+.finder-content {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    grid-auto-rows: 100px;
+    gap: 10px;
+    position: relative; /* For selection box */
+}
+
+.finder-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    color: var(--text-color);
+}
+
+.finder-item:hover { background: var(--hover-bg); }
+.finder-item.selected { background: rgba(59, 130, 246, 0.4); border: 1px solid rgba(59, 130, 246, 0.6); }
+
+.finder-icon {
+    font-size: 40px;
+    margin-bottom: 5px;
+    color: #8ecae6;
+}
+.finder-icon.file { color: var(--text-secondary); }
+
+.finder-name {
+    font-size: 12px;
+    word-break: break-word;
+    line-height: 1.3;
+}
+
+/* Finder View Toggle */
+.finder-view-toggle {
+    display: flex;
+    margin-left: auto;
+    gap: 2px;
+    background: var(--input-bg);
+    border-radius: 6px;
+    padding: 2px;
+}
+
+.view-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.15s;
+}
+
+.view-btn:hover {
+    color: var(--text-color);
+    background: var(--hover-bg);
+}
+
+.view-btn.active {
+    color: var(--accent-text);
+    background: var(--accent-color);
+}
+
+.empty-trash-btn {
+    font-size: 12px;
+    padding: 4px 8px;
+    background: rgba(255, 59, 48, 0.2);
+    color: #ff3b30;
+    border-radius: 4px;
+}
+
+.empty-trash-btn:hover {
+    background: rgba(255, 59, 48, 0.3);
+}
+
+/* Finder Icons View (default grid) */
+.finder-content.icons-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    grid-auto-rows: 100px;
+}
+
+/* Finder List View */
+.finder-content.list-view {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+}
+
+.finder-list-header {
+    display: flex;
+    padding: 8px 12px;
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.finder-list-item {
+    display: flex;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: default;
+    transition: background 0.1s;
+    color: var(--text-color);
+}
+
+.finder-list-item:hover {
+    background: var(--hover-bg);
+}
+
+.finder-list-item.selected {
+    background: rgba(59, 130, 246, 0.2);
+}
+
+.finder-list-item i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.finder-list-item i.folder {
+    color: #8ecae6;
+}
+
+.finder-list-item i.file {
+    color: var(--text-secondary);
+}
+
+.list-col {
+    display: flex;
+    align-items: center;
+}
+
+.list-col.name {
+    flex: 3;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.list-col.size {
+    flex: 1;
+    color: var(--text-muted);
+    font-size: 12px;
+    justify-content: flex-end;
+    padding-right: 20px;
+}
+
+.list-col.kind {
+    flex: 1;
+    color: var(--text-muted);
+    font-size: 12px;
+}

@@ -1,0 +1,279 @@
+/* Claude Code App */
+.claude-layout {
+    display: flex;
+    height: 100%;
+    background: var(--app-bg);
+    color: var(--text-color);
+}
+
+.claude-projects {
+    width: 60px;
+    background: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 0;
+    gap: 15px;
+    border-right: 1px solid var(--border-color);
+}
+
+.project-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+    color: var(--text-color);
+}
+.project-icon:hover { background: var(--hover-bg); }
+.project-icon.active { border-color: var(--accent-color); background: rgba(59, 130, 246, 0.2); }
+
+.claude-sidebar {
+    width: 220px;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.claude-sidebar-header {
+    padding: 15px;
+    font-size: 13px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.chat-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.chat-list-item {
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    margin-bottom: 4px;
+    overflow: hidden;
+    opacity: 0.8;
+    color: var(--text-secondary);
+    transition: all 0.15s ease;
+}
+.chat-list-item:hover { background: var(--hover-bg); opacity: 1; color: var(--text-color); }
+.chat-list-item.active { background: rgba(59, 130, 246, 0.15); color: var(--text-color); opacity: 1; border-left: 2px solid var(--accent-color); }
+
+/* Session item styling */
+.chat-list-item .session-preview {
+    font-weight: 500;
+    margin-bottom: 2px;
+    line-height: 1.3;
+}
+
+.chat-list-item .session-meta {
+    font-size: 10px;
+    opacity: 0.6;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.chat-list-item .session-meta i {
+    font-size: 10px;
+}
+
+.claude-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--app-bg);
+}
+
+.claude-header {
+    height: 50px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    background: var(--header-bg);
+}
+
+.model-selector {
+    background: var(--input-bg);
+    border: none;
+    color: var(--text-color);
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    outline: none;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.msg { margin-bottom: 25px; max-width: 90%; }
+.msg.user { margin-left: auto; background: var(--bg-tertiary); padding: 10px 15px; border-radius: 12px; color: var(--text-color); }
+.msg.ai { margin-right: auto; color: var(--text-color); }
+
+.thinking-block {
+    background: var(--bg-tertiary);
+    border-left: 2px solid var(--border-color);
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.code-diff {
+    background: var(--code-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.diff-header {
+    background: var(--header-bg);
+    padding: 6px 12px;
+    font-size: 11px;
+    font-family: monospace;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+}
+
+.diff-content {
+    padding: 10px;
+    font-family: 'Menlo', monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--code-text);
+}
+
+.diff-line.add { background: rgba(46, 160, 67, 0.15); color: #2ea043; }
+.diff-line.rem { background: rgba(248, 81, 73, 0.15); color: #f85149; }
+
+.claude-input-area {
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+    background: var(--app-bg);
+}
+
+.claude-input-container {
+    background: var(--input-bg);
+    border-radius: 10px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.claude-input-container input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    outline: none;
+    font-size: 14px;
+}
+
+/* Finder Select Button (for Project Picker) */
+.finder-select-btn {
+    background: var(--accent-color);
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: auto;
+}
+.finder-select-btn:hover {
+    background: #2563eb;
+}
+
+/* Approval UI */
+.approval-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    margin: 10px 0;
+    font-size: 13px;
+}
+
+.approval-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.approval-details {
+    background: var(--bg-tertiary);
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-family: monospace;
+    font-size: 12px;
+    color: var(--text-secondary);
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.approval-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.approval-btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.approval-btn.approve {
+    background: var(--accent-color);
+    color: white;
+}
+
+.approval-btn.reject {
+    background: rgba(255, 95, 86, 0.2);
+    color: #ff5f56;
+}
+
+.approval-btn:hover {
+    opacity: 0.9;
+}
+
+.mode-selector {
+    background: var(--input-bg);
+    border: none;
+    color: var(--text-color);
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    outline: none;
+    margin-left: 10px;
+}

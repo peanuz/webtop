@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
+    <title>WebTop - Modern Desktop</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Phosphor Icons via CDN -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- xterm.js for Terminal -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css">
+    <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-addon-web-links@0.9.0/lib/xterm-addon-web-links.min.js"></script>
+    <!-- Custom Syntax Highlighter -->
+    <script src="js/syntax.js"></script>
+    <!-- API Client -->
+    <script src="js/api.js"></script>
+    <!-- Auth Check -->
+    <script>
+        (async function() {
+            try {
+                const res = await fetch('/api/v1/auth/session', { credentials: 'same-origin' });
+                const data = await res.json();
+                if (!data.authenticated) {
+                    window.location.href = '/login';
+                }
+            } catch (e) {
+                window.location.href = '/login';
+            }
+        })();
+    </script>
+</head>
+<body style="opacity: 0; transition: opacity 0.3s;">
+    <!-- Triggers for Immersive Mode -->
+    <div class="edge-trigger-top"></div>
+    <div class="edge-trigger-bottom"></div>
+
+    <!-- Top Bar (Floating Design) -->
+    <div class="top-bar-container">
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <span class="brand-logo">WebTop</span>
+            </div>
+            <div class="top-bar-center">
+                <div class="clock">
+                    <span class="date">Mon 1 Jan</span>
+                    <span class="time">12:00</span>
+                </div>
+            </div>
+            <div class="top-bar-right">
+                <div class="status-icon" id="user-btn" title="User Settings"><i class="ph ph-user"></i></div>
+                <div class="status-icon" id="logout-btn" title="Logout"><i class="ph ph-sign-out"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="desktop" id="desktop">
+        <!-- Background Wallpaper Area -->
+        <div class="desktop-icons-layer" id="desktop-icons-layer"></div>
+        
+        <!-- Window Template (will be cloned by JS) -->
+        <template id="window-template">
+            <div class="window">
+                <div class="window-header">
+                    <div class="window-title">
+                        <i class="ph ph-app-window"></i>
+                        <span class="title-text">Application</span>
+                    </div>
+                    <div class="window-controls">
+                        <button class="control-btn minimize" title="Minimize"><i class="ph ph-minus"></i></button>
+                        <button class="control-btn maximize" title="Maximize"><i class="ph ph-square"></i></button>
+                        <button class="control-btn close" title="Close"><i class="ph ph-x"></i></button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="content-placeholder">
+                        <h2>Welcome!</h2>
+                        <p>This is a draggable and resizable window.</p>
+                    </div>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
+        </template>
+
+        <!-- Dock -->
+        <div class="dock-container">
+            <div class="dock">
+                <button class="dock-item">
+                    <div class="icon-box"><i class="ph ph-folder-notch"></i></div>
+                    <span class="tooltip">Finder</span>
+                </button>
+                <button class="dock-item">
+                    <div class="icon-box"><i class="ph ph-globe"></i></div>
+                    <span class="tooltip">Browser</span>
+                </button>
+                <button class="dock-item">
+                    <div class="icon-box"><i class="ph ph-terminal-window"></i></div>
+                    <span class="tooltip">Terminal</span>
+                </button>
+                <button class="dock-item">
+                    <div class="icon-box"><i class="ph ph-gear"></i></div>
+                    <span class="tooltip">Settings</span>
+                </button>
+                <button class="dock-item">
+                    <div class="icon-box"><i class="ph ph-atom"></i></div>
+                    <span class="tooltip">Editor</span>
+                </button>
+                <button class="dock-item">
+                    <div class="icon-box"><i class="ph ph-sparkle"></i></div>
+                    <span class="tooltip">Claude Code</span>
+                </button>
+                <div class="dock-separator"></div>
+                <button class="dock-item">
+                    <div class="icon-box"><i class="ph ph-trash"></i></div>
+                    <span class="tooltip">Trash</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div id="context-menu" class="context-menu">
+        <div class="menu-item">New Folder</div>
+        <div class="menu-item">Get Info</div>
+        <div class="menu-separator"></div>
+        <div class="menu-item">Change Wallpaper</div>
+        <div class="menu-separator"></div>
+        <div class="menu-item">Paste</div>
+    </div>
+
+    <!-- Selection Box -->
+    <div id="selection-box" class="selection-box"></div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+/* WebTop OS CSS Architecture */
+
+/* 1. Design Tokens & Variables */
+@import "modules/variables.css";
+
+/* 2. Base & Reset */
+@import "modules/base.css";
+
+/* 3. Layout & Desktop Environment */
+@import "modules/layout.css";
+
+/* 4. Shared Components */
+@import "modules/components.css";
+
+/* 5. Applications */
+@import "modules/apps/finder.css";
+@import "modules/apps/browser.css";
+@import "modules/apps/terminal.css";
+@import "modules/apps/editor.css";
+@import "modules/apps/settings.css";
+@import "modules/apps/claude.css";
