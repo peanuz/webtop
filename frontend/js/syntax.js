@@ -1,50 +1,86 @@
 const Syntax = {
     highlight: function(code, lang) {
         if (!code) return '';
-        // Delegate directly to the highlighting logic
-        return this.simpleRegexHighlight(code, lang);
+        // Normalize language
+        lang = (lang || '').toLowerCase();
+        
+        // Map common extensions to languages
+        const langMap = {
+            'js': 'javascript', 'jsx': 'javascript', 'ts': 'javascript', 'tsx': 'javascript', 'mjs': 'javascript',
+            'json': 'json',
+            'html': 'html', 'htm': 'html', 'xml': 'html', 'svg': 'html',
+            'css': 'css', 'scss': 'css', 'less': 'css',
+            'py': 'python', 'python': 'python'
+        };
+        
+        const mode = langMap[lang] || 'text';
+        if (mode === 'text') return this.escapeHtml(code);
+
+        return this.tokenize(code, mode);
     },
 
-    simpleRegexHighlight: function(code, lang) {
-        // 1. Escape HTML (Once!)
-        // This is crucial because we are injecting into innerHTML
-        code = code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    escapeHtml: function(str) {
+        return str.replace(/&/g, "&amp;")
+                  .replace(/</g, "&lt;")
+                  .replace(/>/g, "&gt;");
+    },
 
-        // 2. Define Patterns based on Lang
+    tokenize: function(code, mode) {
+        // 1. Initial Escape (Crucial!)
+        code = this.escapeHtml(code);
+
+        // 2. Define Patterns
         let patterns = [];
-        if (lang === 'html') {
+
+        if (mode === 'html') {
             patterns = [
                 { type: 'comment', regex: /&lt;!--[\s\S]*?--&gt;/g },
-                { type: 'tag', regex: /&lt;!?\/?\w+/gi },
-                { type: 'punctuation', regex: /&gt;/g },
-                { type: 'attr-name', regex: /\s[a-z][a-z0-9-]*(?==)/gi },
-                { type: 'string', regex: /=["'][^"']*["']/g }
+                { type: 'tag', regex: /&lt;\/?[a-z0-9\-]+|&gt;|\/&gt;/gi },
+                { type: 'attr-name', regex: /\s[a-z0-9\-]+(?==)/gi },
+                { type: 'string', regex: /="[^"]*"|='[^']*'/g }, // simplified for attributes
+                { type: 'punctuation', regex: /[=&]/g }
             ];
-        } else if (['js', 'javascript', 'ts', 'json'].includes(lang)) {
+        } 
+        else if (mode === 'javascript' || mode === 'json') {
             patterns = [
                 { type: 'comment', regex: /\/\*[\s\S]*?\*\/|\/\/.*/g },
-                { type: 'string', regex: /(['"`])(?:\\.|(?!\1).)*\1/g },
-                { type: 'keyword', regex: /\b(const|let|var|function|return|if|else|for|while|class|new|this|async|await|try|catch|import|from|export|default|true|false|null|undefined|typeof|instanceof)\b/g },
-                { type: 'number', regex: /\b\d+(\.\d+)?\b/g },
-                { type: 'function', regex: /\b[a-z_$][a-z0-9_$]*(?=\()/gi },
-                { type: 'operator', regex: /[=+\-*\/%&|!?:<>]/g },
-                { type: 'punctuation', regex: /[(){}\[\],;]/g }
+                { type: 'string', regex: /`[^`]*`|'[^']*'|"[^"]*"/g }, // Template literals + normal strings
+                { type: 'keyword', regex: /\b(break|case|catch|class|const|continue|debugger|default|delete|do|else|export|extends|finally|for|function|if|import|in|instanceof|new|return|super|switch|this|throw|try|typeof|var|void|while|with|yield|let|static|enum|await|async|implements|interface|package|private|protected|public)\b/g },
+                { type: 'boolean', regex: /\b(true|false|null|undefined)\b/g },
+                { type: 'function', regex: /\b[a-zA-Z_$][a-zA-Z0-9_$]*(?=\()/g },
+                { type: 'number', regex: /\b\d+(\.\d+)?(e[\+\-]?\d+)?\b/gi },
+                { type: 'operator', regex: /[=+\-*\/%&|!?:^~]/g },
+                { type: 'punctuation', regex: /[(){}\[\],;.]/g },
+                { type: 'class', regex: /\b[A-Z][a-zA-Z0-9_$]*\b/g } // Heuristic for classes/types
             ];
-        } else if (lang === 'css') {
-             patterns = [
+        } 
+        else if (mode === 'css') {
+            patterns = [
                 { type: 'comment', regex: /\/\*[\s\S]*?\*\//g },
-                { type: 'keyword', regex: /@[a-z-]+/g },
-                { type: 'selector', regex: /[^\s{][^{}]*(?=\s*\{)/g },
-                { type: 'property', regex: /[a-z-]+(?=\s*:)/gi },
-                { type: 'string', regex: /(['"])(?:\\.|(?!\1).)*\1/g },
-                { type: 'number', regex: /#[0-9a-fA-F]{3,8}\b|\b\d+(\.\d+)?(px|em|rem|%|vh|vw|s|ms)?\b/g },
+                { type: 'string', regex: /'[^']*'|"[^"]*"/g },
+                { type: 'selector', regex: /([a-z0-9\-_:.\s,#>~]+)(?=\{)/gi }, // Heuristic: text before {
+                { type: 'property', regex: /([a-z0-9\-]+)(?=:)/gi }, // Heuristic: text before :
+                { type: 'number', regex: /#[0-9a-fA-F]{3,8}\b|\b\d+(\.\d+)?(px|em|rem|%|vh|vw|s|ms|deg|fr)?\b/gi },
+                { type: 'keyword', regex: /@[a-z\-]+/g }, // @media, @import
                 { type: 'punctuation', regex: /[{}:;,]/g }
             ];
-        } else {
-            return code; // Plain text
+        }
+        else if (mode === 'python') {
+            patterns = [
+                { type: 'comment', regex: /#.*/g },
+                { type: 'string', regex: /('''[\s\S]*?'''|"""[\s\S]*?"""|'[^']*'|"[^"]*")/g },
+                { type: 'keyword', regex: /\b(and|as|assert|async|await|break|class|continue|def|del|elif|else|except|False|finally|for|from|global|if|import|in|is|lambda|None|nonlocal|not|or|pass|raise|return|True|try|while|with|yield)\b/g },
+                { type: 'function', regex: /\b[a-zA-Z_][a-zA-Z0-9_]*(?=\()/g },
+                { type: 'decorator', regex: /@[a-zA-Z_][a-zA-Z0-9_]*/g },
+                { type: 'number', regex: /\b\d+(\.\d+)?\b/g },
+                { type: 'operator', regex: /[=+\-*\/%&|!?:<>]/g },
+                { type: 'punctuation', regex: /[(){}\[\],:;.]/g },
+                { type: 'class', regex: /\b[A-Z][a-zA-Z0-9_]*\b/g }
+            ];
         }
 
-        // 3. Tokenize with masking
+        // 3. Apply Masks (To prevent nested replacements)
+        // We mask strings and comments first because they contain arbitrary text.
         let masks = [];
         const mask = (str) => {
             const id = `___MASK_${masks.length}___`;
@@ -52,27 +88,40 @@ const Syntax = {
             return id;
         };
 
-        // Apply string/comment patterns first (high priority, opaque)
-        const priorityPatterns = patterns.filter(p => p.type === 'string' || p.type === 'comment');
-        priorityPatterns.forEach(p => {
-            code = code.replace(p.regex, (match) => mask(`<span class="token ${p.type}">${match}</span>`));
-        });
+        // Filter out "container" types that block others (strings, comments)
+        const containerTypes = ['string', 'comment'];
+        const containers = patterns.filter(p => containerTypes.includes(p.type));
+        const others = patterns.filter(p => !containerTypes.includes(p.type));
 
-        // Apply remaining patterns
-        const otherPatterns = patterns.filter(p => p.type !== 'string' && p.type !== 'comment');
-        otherPatterns.forEach(p => {
+        // Apply containers
+        containers.forEach(p => {
             code = code.replace(p.regex, (match) => {
-                if (match.includes('___MASK_')) return match; 
+                // If we are in CSS or HTML, regex might be tricky, but this simple approach usually works for "good enough" highlighting
                 return mask(`<span class="token ${p.type}">${match}</span>`);
             });
         });
 
-        // 4. Unmask (restore highlighted HTML)
-        // We do this in reverse order to respect nesting if any, though our masking is flat.
+        // Apply others
+        others.forEach(p => {
+            code = code.replace(p.regex, (match) => {
+                // Skip if it contains a mask key (already processed)
+                if (match.includes('___MASK_')) return match;
+                return mask(`<span class="token ${p.type}">${match}</span>`);
+            });
+        });
+
+        // 4. Restore Masks
+        // We need to restore in reverse order or just replace all. 
+        // Since our masks are unique ID strings, global replace is fine, but we must do it until no masks remain 
+        // (though here we only have one level of masking logic).
+        
+        // Actually, simple reverse loop is safer.
         for (let i = masks.length - 1; i >= 0; i--) {
-            code = code.replace(masks[i].id, masks[i].value);
+             code = code.replace(masks[i].id, masks[i].value);
         }
 
         return code;
     }
 };
+
+window.Syntax = Syntax;

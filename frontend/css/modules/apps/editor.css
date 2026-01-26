@@ -379,3 +379,4 @@
 .token.selector { color: #e06c75; }
 .token.property { color: #d19a66; }
 .token.value { color: #98c379; }
+\n.token.decorator { color: #56b6c2; }
