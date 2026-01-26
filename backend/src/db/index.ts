@@ -73,19 +73,23 @@ export async function initDatabase() {
   // Check if any user exists, if not create default admin from config
   const existingUsers = await db.select().from(schema.users).limit(1);
   if (existingUsers.length === 0) {
-    console.log("No users found. Creating initial admin user...");
-    const passwordHash = await Bun.password.hash(config.adminPassword, {
-      algorithm: "argon2id",
-    });
+    if (config.adminUsername && config.adminPassword) {
+      console.log("No users found. Creating initial admin user from environment variables...");
+      const passwordHash = await Bun.password.hash(config.adminPassword, {
+        algorithm: "argon2id",
+      });
 
-    await db.insert(schema.users).values({
-      username: config.adminUsername,
-      passwordHash,
-      role: "admin",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-    console.log(`Admin user '${config.adminUsername}' created successfully.`);
+      await db.insert(schema.users).values({
+        username: config.adminUsername,
+        passwordHash,
+        role: "admin",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+      console.log(`Admin user '${config.adminUsername}' created successfully.`);
+    } else {
+      console.log("No users found. Waiting for initial admin setup via UI.");
+    }
   }
 
   console.log("Database initialized");
